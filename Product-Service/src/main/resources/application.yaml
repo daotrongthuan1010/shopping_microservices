@@ -1,4 +1,12 @@
 spring:
+  zipkin:
+    base-url: http://localhost:9411  # Đường dẫn của Zipkin Server
+    sleuth:
+      sampler:
+        probability: 1.0  # Xác suất mẫu 100%
+  cloud:
+    compatibility-verifier:
+      enabled: false
   thymeleaf:
     cache: false
   datasource:

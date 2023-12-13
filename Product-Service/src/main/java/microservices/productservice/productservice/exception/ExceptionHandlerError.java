@@ -11,19 +11,18 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class ExceptionHandlerError extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ProductExceptionCustom.class)
-    public ResponseEntity<MessageErrorResponse> handlerNotFoundException(){
+    public ResponseEntity<MessageErrorResponse> handlerNotFoundException(ProductExceptionCustom exception){
 
         return new ResponseEntity<>(MessageErrorResponse.builder()
-                .messageError("Khong tim thay san pham")
-                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .messageError(exception.getMessage())
+                .errorCode(exception.getErrorCode())
                 .build(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(ProductQuantityExceptionCustom.class)
-    public ResponseEntity<MessageErrorResponse> handlerQuantityProductException(){
+    public ResponseEntity<MessageErrorResponse> handlerQuantityProductException(ProductQuantityExceptionCustom exception){
         return new ResponseEntity<>(MessageErrorResponse.builder()
-                .messageError("San pham da het hang")
-                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .build(), HttpStatus.NOT_FOUND);
+                .messageError(exception.getMessage())
+                .build(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

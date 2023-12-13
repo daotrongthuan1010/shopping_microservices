@@ -43,7 +43,9 @@ public class ProductServiceIpm implements ProductService {
 
         log.info("Getting product...");
 
-       Product product =  productRepository.findById(id).orElseThrow(() ->new ProductExceptionCustom("error code"));
+       Product product =  productRepository.findById(id).orElseThrow(() -> new ProductExceptionCustom(
+               "Khong tim thay san pham",
+               "PRODUCT_NOT_FOUND"));
 
         return ProductResponse.builder()
                 .id(product.getId())
@@ -59,7 +61,7 @@ public class ProductServiceIpm implements ProductService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ProductExceptionCustom("San pham khong tim thay", "NOT_FOUND"));
         if(product.getQuantity() < quantity){
-           throw new ProductQuantityExceptionCustom("San pham het hang");
+           throw new ProductQuantityExceptionCustom("San pham het hang","IN");
         }
         product.setQuantity(product.getQuantity()-quantity);
         productRepository.save(product);

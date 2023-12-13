@@ -10,6 +10,6 @@ public class MessageErrorResponse {
     private String messageError;
 
 
-    @JsonProperty(namespace = "status_code")
-    private int statusCode;
+    @JsonProperty(namespace = "error_code")
+    private String errorCode;
 }

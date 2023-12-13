@@ -1,15 +1,16 @@
 package com.example.orderservice.exception;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@Data
+@EqualsAndHashCode(callSuper = true)
 public class CustomException extends  RuntimeException{
 
-    private final String errorCode;
+    private String errorCode;
 
-    private final int statusCode;
+    private int statusCode;
 
-    public CustomException(String errorCode, int statusCode) {
-        this.errorCode = errorCode;
-        this.statusCode = statusCode;
-    }
 
     public CustomException(String message, String errorCode, int statusCode) {
         super(message);
