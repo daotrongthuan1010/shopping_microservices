@@ -1,0 +1,30 @@
+spring:
+  cloud:
+    compatibility-verifier:
+      enabled: false
+  thymeleaf:
+    cache: false
+  datasource:
+    url: jdbc:mysql://localhost:3306/payment?useSSL=false
+    username: root
+    password: mk123654
+  jpa:
+    open-in-view: false
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      properties:
+        hibernate:
+          validator:
+            apply_to_ddl: false
+        dialect: org.hibernate.dialect.MySQL5Dialect
+  application:
+    name: PRODUCT-SERVICE
+  config:
+    import: configserver:http://localhost:9296
+server:
+  port: 8080
+management:
+  tracing:
+    sampling:
+      probability: 1.0
