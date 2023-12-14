@@ -6,3 +6,7 @@ eureka:
   client:
     fetch-registry: false
     register-with-eureka: false
+management:
+  tracing:
+    sampling:
+      probability: 1.0

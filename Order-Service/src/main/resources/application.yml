@@ -1,9 +1,4 @@
 spring:
-  zipkin:
-    base-url: http://localhost:9411  # Đường dẫn của Zipkin Server
-    sleuth:
-      sampler:
-        probability: 1.0
   cloud:
     compatibility-verifier:
       enabled: false
@@ -29,4 +24,8 @@ spring:
     import: configserver:http://localhost:9296
 server:
   port: 8081
+management:
+  tracing:
+    sampling:
+      probability: 1.0
 
