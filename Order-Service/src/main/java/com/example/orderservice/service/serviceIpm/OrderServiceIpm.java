@@ -10,8 +10,6 @@ import com.example.orderservice.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.io.IOException;
 import java.time.Instant;
 
 @Slf4j
@@ -39,7 +37,7 @@ public class OrderServiceIpm implements OrderService {
                         .orderTime(Instant.now())
                         .quantity(orderRequest.getQuantity())
                 .build());
-        String orderStatus = null;
+        String orderStatus;
         log.info("Call payment service for order service...");
         try{
             paymentService.doPayment(PaymentRequest.builder()
