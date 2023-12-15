@@ -47,7 +47,7 @@ public class ProductServiceIpm implements ProductService {
         log.info("Getting product...");
 
        Product product =  productRepository.findById(id).orElseThrow(() -> new ProductExceptionCustom(
-               "Khong tim thay san pham",
+               "San pham khong tim thay, vui long thu lai",
                "PRODUCT_NOT_FOUND"));
 
         return ProductResponse.builder()
