@@ -1,8 +1,9 @@
 package com.example.orderservice.service;
 
+import com.example.orderservice.entity.Order;
 import com.example.orderservice.request.OrderRequest;
 
 public interface OrderService {
-    long placeOrder(OrderRequest orderRequest);
+    Long placeOrder(OrderRequest orderRequest);
 
 }

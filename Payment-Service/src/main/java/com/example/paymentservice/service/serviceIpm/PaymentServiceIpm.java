@@ -7,6 +7,7 @@ import com.example.paymentservice.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 
@@ -18,6 +19,7 @@ public class PaymentServiceIpm implements PaymentService {
     private final PaymentRepository paymentRepository;
 
     @Override
+    @Transactional
     public long addPayment(PaymentRequest request) {
         log.info("Start save repository payment with orderId: {}", request.getOrderId());
         paymentRepository.save(TransactionDetails.builder()

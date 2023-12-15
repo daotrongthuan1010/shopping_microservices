@@ -10,6 +10,7 @@ import microservices.productservice.productservice.model.ProductResponse;
 import microservices.productservice.productservice.repository.ProductRepository;
 import microservices.productservice.productservice.service.ProductService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -25,6 +26,7 @@ public class ProductServiceIpm implements ProductService {
     }
 
     @Override
+    @Transactional
     public long addProduct(ProductRequest productRequest) {
 
         log.info("Adding product...");
@@ -39,6 +41,7 @@ public class ProductServiceIpm implements ProductService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ProductResponse getProductById(Long id) {
 
         log.info("Getting product...");
@@ -56,6 +59,7 @@ public class ProductServiceIpm implements ProductService {
     }
 
     @Override
+    @Transactional
     public void reduceQuantity(long productId, long quantity) {
         log.info("Reduce quantity {} for Id: {}", quantity, productId);
         Product product = productRepository.findById(productId)
