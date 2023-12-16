@@ -25,6 +25,12 @@ public class OrderServiceIpm implements OrderService {
 
     private final PaymentService paymentService;
 
+    private static final String ORDER_STATUS_CREATE = "CREATE";
+
+    private static final String ORDER_STATUS_FAILED = "PAYMENT_FAILED";
+
+    private static final String ORDER_STATUS_SUCCESS = "PLACED";
+
     @Override
     @Transactional
     public Long placeOrder(OrderRequest orderRequest) {
@@ -35,7 +41,7 @@ public class OrderServiceIpm implements OrderService {
 
     Order order =   orderRepository.save(Order.builder()
                         .amount(orderRequest.getTotalAmount())
-                        .orderStatus("CREATE")
+                        .orderStatus(ORDER_STATUS_CREATE)
                         .productId(orderRequest.getProductId())
                         .orderTime(Instant.now())
                         .quantity(orderRequest.getQuantity())
@@ -48,11 +54,11 @@ public class OrderServiceIpm implements OrderService {
                             .paymentMode(orderRequest.getPaymentMode())
                             .amount(orderRequest.getTotalAmount())
                     .build());
-            orderStatus = "PLACED";
+            orderStatus = ORDER_STATUS_SUCCESS;
         }
         catch (Exception exception){
             log.error("Error payment order....");
-            orderStatus = "PAYMENT_FAILED";
+            orderStatus = ORDER_STATUS_FAILED;
         }
 
         order.setOrderStatus(orderStatus);

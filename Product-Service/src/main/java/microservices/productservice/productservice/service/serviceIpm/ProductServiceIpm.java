@@ -65,7 +65,7 @@ public class ProductServiceIpm implements ProductService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ProductExceptionCustom("San pham khong tim thay", "NOT_FOUND"));
         if(product.getQuantity() < quantity){
-           throw new ProductQuantityExceptionCustom("San pham het hang, vui long cho doi kho lay hang","IN");
+           throw new ProductQuantityExceptionCustom("San pham het hang, vui long cho doi kho lay hang","INTERNAL_SERVER_ERROR");
         }
         product.setQuantity(product.getQuantity()-quantity);
         productRepository.save(product);
