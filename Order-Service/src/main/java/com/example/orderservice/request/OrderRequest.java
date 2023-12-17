@@ -3,9 +3,6 @@ package com.example.orderservice.request;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-
 @Data
 @AllArgsConstructor
 public class OrderRequest {
@@ -15,6 +12,8 @@ public class OrderRequest {
     private long totalAmount;
 
     private long quantity;
+
+    private String referenceNumber;
 
     private PaymentMode paymentMode;
 }

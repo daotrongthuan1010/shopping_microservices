@@ -7,7 +7,7 @@ import lombok.Data;
 @Builder
 public class PaymentRequest {
 
-    private long OrderId;
+    private long orderId;
 
     private long amount;
 

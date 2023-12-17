@@ -1,6 +1,7 @@
 package com.example.orderservice.controller;
 
 import com.example.orderservice.request.OrderRequest;
+import com.example.orderservice.response.OrderResponse;
 import com.example.orderservice.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +21,14 @@ public class OrderController {
     public ResponseEntity<Long> placeOrder(@RequestBody  OrderRequest orderRequest){
         long orderId = orderService.placeOrder(orderRequest);
         log.info("Order Id: {}", orderId);
-        return new ResponseEntity<>(orderId, HttpStatus.OK);
+        return new ResponseEntity<>(orderId, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/get/{id}")
+    public ResponseEntity<OrderResponse> placeOrder(@PathVariable long id ){
+        OrderResponse orderResponse = orderService.findById(id);
+
+        return new ResponseEntity<>(orderResponse, HttpStatus.OK);
     }
 
 }
