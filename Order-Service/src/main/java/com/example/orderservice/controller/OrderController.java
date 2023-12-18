@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/api/order")
@@ -20,6 +22,8 @@ public class OrderController {
     @PostMapping("/add")
     public ResponseEntity<Long> placeOrder(@RequestBody  OrderRequest orderRequest){
         long orderId = orderService.placeOrder(orderRequest);
+
+
         log.info("Order Id: {}", orderId);
         return new ResponseEntity<>(orderId, HttpStatus.CREATED);
     }
@@ -27,8 +31,9 @@ public class OrderController {
     @GetMapping("/get/{id}")
     public ResponseEntity<OrderResponse> placeOrder(@PathVariable long id ){
         OrderResponse orderResponse = orderService.findById(id);
-
         return new ResponseEntity<>(orderResponse, HttpStatus.OK);
     }
+
+
 
 }

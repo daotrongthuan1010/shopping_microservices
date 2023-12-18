@@ -1,8 +1,11 @@
 package com.example.paymentservice.service.serviceIpm;
 
 import com.example.paymentservice.entity.TransactionDetails;
+import com.example.paymentservice.exception.PaymentNotFoundException;
+import com.example.paymentservice.model.PaymentMode;
 import com.example.paymentservice.model.PaymentRequest;
 import com.example.paymentservice.repository.PaymentRepository;
+import com.example.paymentservice.repsonse.PaymentResponse;
 import com.example.paymentservice.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,5 +34,21 @@ public class PaymentServiceIpm implements PaymentService {
                         .amount(request.getAmount())
                         .build());
         return 0;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PaymentResponse findById(Long id) {
+
+        TransactionDetails transactionDetails = paymentRepository.findById(id).orElseThrow(
+                ()-> new PaymentNotFoundException("Hoa don thanh toan khong tim thay, vui long thu lai", "PAYMENT_NOT_FOUND"));
+
+        return PaymentResponse.builder()
+                .paymentId(transactionDetails.getId())
+                .paymentMode(PaymentMode.valueOf(transactionDetails.getPaymentMode()))
+                .status(transactionDetails.getPaymentStatus())
+                .paymentDate(transactionDetails.getPaymentDate())
+                .amount(transactionDetails.getAmount())
+                .build();
     }
 }

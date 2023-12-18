@@ -1,5 +1,6 @@
 package com.example.orderservice.response;
 
+import com.example.orderservice.external.response.PaymentResponse;
 import com.example.orderservice.external.response.ProductResponse;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -27,7 +28,10 @@ public class OrderResponse {
     @JsonProperty(namespace = "amount")
     private long amount;
 
-    @JsonProperty(namespace = "product")
+    @JsonProperty(namespace = "product_detail")
     private ProductResponse productResponse;
+
+    @JsonProperty(namespace = "payment_detail")
+    private PaymentResponse paymentResponse;
 
 }

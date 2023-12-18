@@ -5,6 +5,7 @@ import com.example.orderservice.exception.OrderNotFoundException;
 import com.example.orderservice.external.PaymentService;
 import com.example.orderservice.external.ProductService;
 import com.example.orderservice.external.request.PaymentRequest;
+import com.example.orderservice.external.response.PaymentResponse;
 import com.example.orderservice.external.response.ProductResponse;
 import com.example.orderservice.repository.OrderRepository;
 import com.example.orderservice.request.OrderRequest;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.Instant;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -76,7 +78,6 @@ public class OrderServiceIpm implements OrderService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public OrderResponse findById(long id) {
         log.info("Get order detail...");
      Order order =  orderRepository.findById(id).orElseThrow(()
@@ -84,18 +85,33 @@ public class OrderServiceIpm implements OrderService {
      log.info("Get product detail...");
 
      try {
+         log.info("Start get product response");
          ProductResponse productResponse =
-                 restTemplate.getForObject("http://PRODUCT-SERVICE/product" + order.getProductId(), ProductResponse.class);
+                 restTemplate.getForObject("http://PRODUCT-SERVICE/api/product/get/" + order.getProductId(), ProductResponse.class);
+
+         log.info("Start get payment response");
+
+         PaymentResponse paymentResponse = restTemplate.getForObject(
+                 "http://PAYMENT-SERVICE/api/payment/get/" + order.getId(), PaymentResponse.class);
+
          return OrderResponse.builder()
                  .orderId(order.getId())
                  .orderStatus(order.getOrderStatus())
                  .amount(order.getAmount())
                  .orderDate(order.getOrderTime())
                  .productResponse(productResponse)
+                 .paymentResponse(paymentResponse)
                  .build();
      }
      catch (Exception exception){
-         throw new OrderNotFoundException("Khong tim thay id san pham, vui long kiem tra lai", "NOT_FOUND_PRODUCT");
+         throw new OrderNotFoundException(
+                 "Khong ton tai san pham hoac hoa don trong he thong, vui long thu lai", "NOT_FOUND_PRODUCT");
      }
     }
+
+    @Override
+    public List<OrderResponse> findAll() {
+        return null;
+    }
+
 }

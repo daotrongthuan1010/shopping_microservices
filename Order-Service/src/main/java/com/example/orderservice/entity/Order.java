@@ -22,6 +22,8 @@ public class Order {
 
     private long productId;
 
+    private long paymentId;
+
     private long quantity;
 
     private Instant orderTime;
