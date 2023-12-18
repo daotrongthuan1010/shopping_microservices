@@ -2,6 +2,11 @@
 <project version="4">
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="web" url="file://$PROJECT_DIR$/Config-Server" />
+    <file type="web" url="file://$PROJECT_DIR$/Gateway-Service" />
+    <file type="web" url="file://$PROJECT_DIR$/Order-Service" />
+    <file type="web" url="file://$PROJECT_DIR$/Payment-Service" />
+    <file type="web" url="file://$PROJECT_DIR$/Product-Service" />
     <file type="web" url="file://$PROJECT_DIR$/Service-Registry" />
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_20" project-jdk-name="19" project-jdk-type="JavaSDK">

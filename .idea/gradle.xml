@@ -5,7 +5,6 @@
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
         <option name="externalProjectPath" value="$PROJECT_DIR$/Config-Server" />
-        <option name="gradleJvm" value="#JAVA_HOME" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$/Config-Server" />
@@ -14,7 +13,6 @@
       </GradleProjectSettings>
       <GradleProjectSettings>
         <option name="externalProjectPath" value="$PROJECT_DIR$/Gateway-Service" />
-        <option name="gradleJvm" value="#JAVA_HOME" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$/Gateway-Service" />
@@ -23,7 +21,6 @@
       </GradleProjectSettings>
       <GradleProjectSettings>
         <option name="externalProjectPath" value="$PROJECT_DIR$/Order-Service" />
-        <option name="gradleJvm" value="#JAVA_HOME" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$/Order-Service" />
@@ -32,7 +29,6 @@
       </GradleProjectSettings>
       <GradleProjectSettings>
         <option name="externalProjectPath" value="$PROJECT_DIR$/Payment-Service" />
-        <option name="gradleJvm" value="#JAVA_HOME" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$/Payment-Service" />
@@ -41,7 +37,6 @@
       </GradleProjectSettings>
       <GradleProjectSettings>
         <option name="externalProjectPath" value="$PROJECT_DIR$/Product-Service" />
-        <option name="gradleJvm" value="#JAVA_HOME" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$/Product-Service" />
@@ -49,9 +44,7 @@
         </option>
       </GradleProjectSettings>
       <GradleProjectSettings>
-        <option name="distributionType" value="LOCAL" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/Service-Registry" />
-        <option name="gradleJvm" value="19" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$/Service-Registry" />
