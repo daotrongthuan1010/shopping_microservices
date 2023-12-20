@@ -5,7 +5,7 @@ spring:
   thymeleaf:
     cache: false
   datasource:
-    url: jdbc:mysql://localhost:3306/orderdb?useSSL=false
+    url: jdbc:mysql://localhost:3306/orderdb?useSSL=false&&allowPublicKeyRetrieval=true
     username: root
     password: mk123654
   jpa:
@@ -22,6 +22,22 @@ spring:
     name: ORDER-SERVICE
   config:
     import: configserver:http://localhost:9296
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://dev-95099325.okta.com/oauth2/default
+      client:
+        registration:
+          internal-client:
+            provider: okta
+            authorization-grant-type: client_credentials
+            scope: internal
+            client-id: 0oae0rl6tqZwQh4T95d7
+            client-secret: u0PSx12W8Kf7BMsNmMAiW5IH6DY7anTGkl0LEi7tnqnY9lCHoxNrSY0QljWumY9F
+        provider:
+          okta:
+            issuer-uri: https://dev-95099325.okta.com/oauth2/default
 server:
   port: 8081
 management:
