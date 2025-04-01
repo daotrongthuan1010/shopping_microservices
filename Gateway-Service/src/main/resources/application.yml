@@ -1,10 +1,35 @@
 server:
   port: 9090
+
 spring:
+  zipkin:
+    base-url: http://203.171.21.64:9411 # Địa chỉ của Zipkin server
+    sleuth:
+      sampler:
+        probability: 1.0 # Xác suất ghi nhận truy vết
+      enabled: true
+    zipkin:
+      enabled: true
   application:
     name: GATEWAY-SERVICE
   config:
     import: configserver:http://localhost:9296
+  security:
+    oauth2:
+      client:
+        registration:
+          github: # Thay 'okta' bằng 'github'
+            client-id: Ov23liPpsEZ09bdPgcvV      # Thay bằng Client ID từ GitHub
+            client-secret: 3ecf95ed3c95bcd08257fd2a3ae3c690251c17fa  # Thay bằng Client Secret từ GitHub
+            scope: user:email  # Scope để lấy email người dùng
+            authorization-grant-type: authorization_code
+            redirect-uri: http://localhost:9090/login/oauth2/code/github
+        provider:
+          github: # Cấu hình provider GitHub
+            authorization-uri: https://github.com/login/oauth/authorize
+            token-uri: https://github.com/login/oauth/access_token
+            user-info-uri: https://api.github.com/user
+            user-name-attribute: login
   cloud:
     gateway:
       routes:
@@ -17,6 +42,7 @@ spring:
               args:
                 name: ORDER-SERVICE
                 fallbackuri: forward:/orderServiceFallBack
+            - TokenRelay=                        # Chuyển token đến ORDER-SERVICE
         - id: PAYMENT-SERVICE
           uri: lb://PAYMENT-SERVICE
           predicates:
@@ -26,6 +52,7 @@ spring:
               args:
                 name: PAYMENT-SERVICE
                 fallbackuri: forward:/paymentServiceFallBack
+            - TokenRelay=                        # Chuyển token đến PAYMENT-SERVICE
         - id: PRODUCT-SERVICE
           uri: lb://PRODUCT-SERVICE
           predicates:
@@ -35,10 +62,4 @@ spring:
               args:
                 name: PRODUCT-SERVICE
                 fallbackuri: forward:/productServiceFallBack
-okta:
-  oauth2:
-    issuer: https://dev-95099325.okta.com/oauth2/default
-    audience: api://default
-    client-id: 0oae0rl6tqZwQh4T95d7
-    client-secret: u0PSx12W8Kf7BMsNmMAiW5IH6DY7anTGkl0LEi7tnqnY9lCHoxNrSY0QljWumY9F
-    scopes: openid, email, profile, offline_access
+            - TokenRelay=                        # Chuyển token đến PRODUCT-SERVICE
