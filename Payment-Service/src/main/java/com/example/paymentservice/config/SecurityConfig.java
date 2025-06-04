@@ -16,6 +16,7 @@ public class SecurityConfig {
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests
                                 .requestMatchers("/payment/**")
+                                    
                                 .hasAuthority("SCOPE_internal")
                                 .anyRequest()
                                 .authenticated())

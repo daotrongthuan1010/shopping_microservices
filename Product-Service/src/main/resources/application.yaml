@@ -1,31 +1,108 @@
 spring:
+  application:
+    name: PRODUCT-SERVICE
+
+  # Disable Config Server
   cloud:
+    config:
+      enabled: false
+      fail-fast: false
     compatibility-verifier:
       enabled: false
-  thymeleaf:
-    cache: false
+    discovery:
+      enabled: true
+
+  # Write Database - PostgreSQL (ACID compliance for commands)
   datasource:
-    url: jdbc:mysql://localhost:3306/quanly?useSSL=false
-    username: root
-    password: mk123654
+    url: jdbc:postgresql://localhost:15432/product_db
+    username: ${DB_USERNAME:admin}
+    password: ${DB_PASSWORD:pz;H8UgB}
+    driver-class-name: org.postgresql.Driver
+
   jpa:
     open-in-view: false
     show-sql: true
     hibernate:
       ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+  # Read Database - MongoDB (Flexible schema for queries)
+  data:
+    mongodb:
+      uri: ${MONGO_URI:mongodb://admin:mk123654@localhost:27017/product_db?authSource=admin}
+      auto-index-creation: false
+
+    # Redis for caching hot data
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      timeout: 2000ms
+      connect-timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+        shutdown-timeout: 100ms
+
+  # Kafka Configuration for CQRS Events
+  kafka:
+    bootstrap-servers: ${KAFKA_SERVERS:localhost:29092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all
+      retries: 3
+    consumer:
+      group-id: product-service-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
-        hibernate:
-          validator:
-            apply_to_ddl: false
-        dialect: org.hibernate.dialect.MySQL5Dialect
-  application:
-    name: PRODUCT-SERVICE
-  config:
-    import: configserver:http://localhost:9296
+        spring.json.trusted.packages: "microservices.productservice.productservice.cqrs.events"
+      auto-offset-reset: earliest
+
+  # Caching Configuration
+  cache:
+    type: redis
+    redis:
+      time-to-live: 600000
+
+# Server Configuration
 server:
-  port: 8080
+  port: 8099
+
+# Eureka Service Discovery
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${server.port}
+
+# Management & Monitoring
 management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
   tracing:
-    sampling:
-      probability: 1.0
+    enabled: false
+
+# Logging Configuration
+logging:
+  level:
+    microservices.productservice: INFO
+    org.springframework.cloud: ERROR
+    io.micrometer: ERROR
 

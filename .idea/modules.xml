@@ -2,11 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Config-Server.iml" filepath="$PROJECT_DIR$/.idea/modules/Config-Server.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Gateway-Service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Gateway-Service.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Order-Service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Order-Service.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Payment-Service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Payment-Service.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Product-Service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Product-Service.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/auth-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/auth-service.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/microservices.iml" filepath="$PROJECT_DIR$/.idea/microservices.iml" />
     </modules>
   </component>

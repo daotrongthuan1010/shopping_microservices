@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OAuth2 GitHub Test</title>
+</head>
+<body>
+    <h1>Auth Service OAuth2 Test</h1>
+    
+    <button onclick="loginWithGitHub()">Login with GitHub</button>
+    
+    <div id="result" style="margin-top: 20px;"></div>
+    
+    <script>
+        function loginWithGitHub() {
+            window.location.href = 'http://localhost:8084/oauth2/authorize/github';
+        }
+        
+        // Parse tokens from URL if redirected back
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+            const refreshToken = urlParams.get('refreshToken');
+            
+            if (token) {
+                document.getElementById('result').innerHTML = `
+                    <h3>Login Successful!</h3>
+                    <p><strong>Access Token:</strong></p>
+                    <textarea rows="3" cols="80">${token}</textarea>
+                    <p><strong>Refresh Token:</strong></p>
+                    <textarea rows="3" cols="80">${refreshToken}</textarea>
+                    <br><br>
+                    <button onclick="testToken('${token}')">Test Token</button>
+                `;
+            }
+        };
+        
+        function testToken(token) {
+            fetch('http://localhost:8084/api/auth/me', {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').innerHTML += `
+                    <h3>User Info:</h3>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>

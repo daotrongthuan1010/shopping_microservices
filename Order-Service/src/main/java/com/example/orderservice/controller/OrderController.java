@@ -19,7 +19,6 @@ import java.util.List;
 public class OrderController {
 
     private final OrderService orderService;
-
     @PreAuthorize("hasAuthority('Customer')")
     @PostMapping("/add")
     public ResponseEntity<Long> placeOrder(@RequestBody  OrderRequest orderRequest){
