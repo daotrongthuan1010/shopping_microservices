@@ -8,8 +8,10 @@ import microservices.productservice.productservice.dto.request.UpdateProductRequ
 import microservices.productservice.productservice.dto.request.UpdateQuantityRequest;
 import microservices.productservice.productservice.dto.response.ApiResponse;
 import microservices.productservice.productservice.mapper.ProductMapper;
+import microservices.productservice.productservice.config.SecurityUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+// import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,8 +28,15 @@ public class ProductCommandController {
     private final ProductMapper productMapper;
     
     @PostMapping
+    // @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<ApiResponse<Long>> createProduct(@Valid @RequestBody CreateProductRequest request) {
         log.info("Creating product: {}", request.getName());
+
+        // Manual authorization check
+        if (!SecurityUtils.isAdmin()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(ApiResponse.error("Access denied. Admin role required."));
+        }
         
         try {
             Long productId = commandHandler.handle(productMapper.toCommand(request));
@@ -43,11 +52,18 @@ public class ProductCommandController {
     }
     
     @PutMapping("/{productId}")
+    // @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<ApiResponse<Void>> updateProduct(
             @PathVariable Long productId,
             @Valid @RequestBody UpdateProductRequest request) {
-        
+
         log.info("Updating product: {}", productId);
+
+        // Manual authorization check
+        if (!SecurityUtils.isAdmin()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(ApiResponse.error("Access denied. Admin role required."));
+        }
         
         try {
             commandHandler.handle(productMapper.toCommand(productId, request));
@@ -68,11 +84,18 @@ public class ProductCommandController {
     }
     
     @PatchMapping("/{productId}/reduce-quantity")
+    // @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
     public ResponseEntity<ApiResponse<Void>> reduceQuantity(
             @PathVariable Long productId,
             @Valid @RequestBody UpdateQuantityRequest request) {
-        
+
         log.info("Reducing quantity for product: {} by {}", productId, request.getQuantity());
+
+        // Manual authorization check - both ADMIN and USER can reduce quantity
+        if (!SecurityUtils.isAdmin() && !SecurityUtils.isUser()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(ApiResponse.error("Access denied. Admin or User role required."));
+        }
         
         try {
             commandHandler.handle(productMapper.toReduceQuantityCommand(productId, request));
@@ -93,6 +116,7 @@ public class ProductCommandController {
     }
     
     @PatchMapping("/{productId}/increase-quantity")
+    // @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<ApiResponse<Void>> increaseQuantity(
             @PathVariable Long productId,
             @Valid @RequestBody UpdateQuantityRequest request) {
@@ -115,6 +139,7 @@ public class ProductCommandController {
     }
     
     @DeleteMapping("/{productId}")
+    // @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<ApiResponse<Void>> deleteProduct(
             @PathVariable Long productId,
             @RequestParam(required = false, defaultValue = "Manual deletion") String reason) {
@@ -137,6 +162,7 @@ public class ProductCommandController {
     }
     
     @PatchMapping("/{productId}/status")
+    // @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<ApiResponse<Void>> updateStatus(
             @PathVariable Long productId,
             @RequestParam String status,

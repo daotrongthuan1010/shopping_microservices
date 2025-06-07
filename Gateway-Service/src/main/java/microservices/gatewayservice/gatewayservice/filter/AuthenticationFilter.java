@@ -47,10 +47,19 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
             String token = authHeader.substring(7);
             
             return validateToken(token)
-                .flatMap(isValid -> {
-                    if (isValid) {
+                .flatMap(tokenResponse -> {
+                    if (tokenResponse.isValid()) {
                         log.debug("Token validated successfully for path: {}", path);
-                        return chain.filter(exchange);
+
+                        // Add user information to headers for downstream services
+                        var mutatedRequest = exchange.getRequest().mutate()
+                            .header("X-User-Id", String.valueOf(tokenResponse.getUserId()))
+                            .header("X-User-Email", tokenResponse.getEmail())
+                            .header("X-User-Role", tokenResponse.getRole())
+                            .build();
+
+                        var mutatedExchange = exchange.mutate().request(mutatedRequest).build();
+                        return chain.filter(mutatedExchange);
                     } else {
                         log.warn("Token validation failed for path: {}", path);
                         exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
@@ -77,7 +86,7 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                path.startsWith("/v3/api-docs");
     }
 
-    private Mono<Boolean> validateToken(String token) {
+    private Mono<TokenValidationResponse> validateToken(String token) {
         String requestBody = String.format("{\"token\":\"%s\"}", token);
 
         return webClient.post()
@@ -86,10 +95,9 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
             .bodyValue(requestBody)
             .retrieve()
             .bodyToMono(TokenValidationResponse.class)
-            .map(TokenValidationResponse::isValid)
-            .doOnSuccess(isValid -> log.debug("Token validation result: {}", isValid))
+            .doOnSuccess(response -> log.debug("Token validation result: {}", response.isValid()))
             .doOnError(error -> log.error("Token validation error: {}", error.getMessage()))
-            .onErrorReturn(false);
+            .onErrorReturn(new TokenValidationResponse(false, "Validation service error"));
     }
 
     public static class Config {
@@ -102,6 +110,15 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
         private String email;
         private String role;
         private String message;
+
+        // Default constructor
+        public TokenValidationResponse() {}
+
+        // Constructor for error cases
+        public TokenValidationResponse(boolean valid, String message) {
+            this.valid = valid;
+            this.message = message;
+        }
 
         // Getters and setters
         public boolean isValid() { return valid; }
