@@ -1,0 +1,39 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  # Giám sát chat-service (đã có)
+  - job_name: 'chat-service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['host.docker.internal:8080']
+
+  # Giám sát chính Prometheus
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['prometheus:9090']
+
+  # Giám sát Redis
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis_exporter:9121']  # Cần thêm Redis Exporter
+
+  # Giám sát Kafka
+  - job_name: 'kafka'
+    static_configs:
+      - targets: ['kafka_exporter:9308']  # Cần thêm Kafka Exporter
+
+  # Giám sát Elasticsearch
+  - job_name: 'elasticsearch'
+    static_configs:
+      - targets: ['elasticsearch_exporter:9114']  # Cần thêm Elasticsearch Exporter
+
+  # Giám sát PostgreSQL
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['postgres_exporter:9187']  # Cần thêm Postgres Exporter
+
+  # Giám sát MongoDB
+  - job_name: 'mongodb'
+    static_configs:
+      - targets: ['mongodb_exporter:9216']  # Cần thêm MongoDB Exporter
